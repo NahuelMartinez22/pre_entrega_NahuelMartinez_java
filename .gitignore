@@ -1,0 +1,16 @@
+# === Archivos y carpetas a ignorar ===
+
+# Archivos compilados
+/out/
+*.class
+
+# Configuración de IntelliJ IDEA
+/.idea/
+*.iml
+misc.xml
+modules.xml
+vcs.xml
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db

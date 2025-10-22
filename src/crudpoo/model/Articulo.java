@@ -24,6 +24,6 @@ public class Articulo extends Producto {
 
     @Override
     public String toString() {
-        return super.toString() + ", categoria=" + categoria.getNombre();
+        return super.toString() + " | Categoría: " + categoria.getNombre();
     }
 }

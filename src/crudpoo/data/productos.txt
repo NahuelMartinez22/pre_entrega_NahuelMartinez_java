@@ -1,3 +1,8 @@
-Articulo;1;rtx 570;120.0;1
-Articulo;2;3050;300.0;1
-Articulo;3;rx 590;300.0;1
+Procesador;1;580;250.0;2;5;2;4.0;0.0
+PlacaDeVideo;2;3090;1000.0;1;16;GDDR7;30000.0
+PlacaDeVideo;3;rx 1650;100.0;1;5;5;5.0
+PlacaDeVideo;4;3050;300.0;1;4;6;4.0
+PlacaDeVideo;5;gpu;122.0;1;1;1;1.0
+Procesador;6;cpu;230.0;1;8;23;3.9;0.0
+Servicio;7;limpieza;100.0;0
+PlacaDeVideo;8;3070;200.0;1;6;7;2.0

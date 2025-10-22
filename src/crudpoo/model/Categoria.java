@@ -6,8 +6,15 @@ public class Categoria {
     private String nombre;
     private static int contador = 1;
 
+    // 🔹 Constructor con solo nombre (autoincrementa)
     public Categoria(String nombre) {
         this.id = contador++;
+        this.nombre = nombre;
+    }
+
+    // 🔹 Constructor con id fijo (NO altera el contador)
+    public Categoria(int id, String nombre) {
+        this.id = id;
         this.nombre = nombre;
     }
 

@@ -2,7 +2,6 @@ package crudpoo.main;
 
 import crudpoo.model.Categoria;
 import crudpoo.model.Producto;
-import crudpoo.service.ArchivoCategoriasHelper;
 import crudpoo.service.ArchivoProductosHelper;
 import crudpoo.service.CrudProductos;
 
@@ -11,7 +10,11 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args) {
-        ArrayList<Categoria> categorias = ArchivoCategoriasHelper.cargarCategorias();
+
+        ArrayList<Categoria> categorias = new ArrayList<>();
+        categorias.add(new Categoria(1, "Placa de video"));
+        categorias.add(new Categoria(2, "Procesador"));
+
         ArrayList<Producto> productos = ArchivoProductosHelper.cargarProductos(categorias);
 
         CrudProductos crudProductos = new CrudProductos(productos, categorias);
@@ -34,6 +37,5 @@ public class Main {
         } while (opcion != 0);
 
         ArchivoProductosHelper.guardarProductos(productos);
-        ArchivoCategoriasHelper.guardarCategorias(categorias);
     }
 }
