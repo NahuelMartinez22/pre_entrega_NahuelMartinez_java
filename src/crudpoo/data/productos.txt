@@ -1,0 +1,3 @@
+Articulo;1;rtx 570;120.0;1
+Articulo;2;3050;300.0;1
+Articulo;3;rx 590;300.0;1
