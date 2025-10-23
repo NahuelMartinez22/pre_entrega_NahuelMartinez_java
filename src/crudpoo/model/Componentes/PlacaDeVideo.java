@@ -8,8 +8,8 @@ public class PlacaDeVideo extends Articulo {
     private String tipoMemoria;
     private double velocidadMemoria;
 
-    public PlacaDeVideo(String nombre, double precio, Categoria categoria, int vram, String tipoMemoria, double velocidadMemoria) {
-        super(nombre, precio, categoria);
+    public PlacaDeVideo(String nombre, double precio, Categoria categoria, int vram, String tipoMemoria, double velocidadMemoria, int stock) {
+        super(nombre, precio, categoria, stock);
         this.vram = vram;
         this.tipoMemoria = tipoMemoria;
         this.velocidadMemoria = velocidadMemoria;

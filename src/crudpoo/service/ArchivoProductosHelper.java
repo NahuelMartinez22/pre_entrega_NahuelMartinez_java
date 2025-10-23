@@ -27,7 +27,8 @@ public class ArchivoProductosHelper {
                                 (placa.getCategoria() != null ? placa.getCategoria().getId() : 0) + ";" +
                                 placa.getVram() + ";" +
                                 placa.getTipoMemoria() + ";" +
-                                placa.getVelocidadMemoria() + "\n");
+                                placa.getVelocidadMemoria() + ";" +
+                                placa.getStock() + "\n");
                     }
 
                     else if (p instanceof Procesador cpu) {
@@ -39,14 +40,16 @@ public class ArchivoProductosHelper {
                                 cpu.getNucleos() + ";" +
                                 cpu.getHilos() + ";" +
                                 cpu.getFrecuenciaBase() + ";" +
-                                cpu.getFrecuenciaTurbo() + "\n");
+                                cpu.getFrecuenciaTurbo() + ";" +
+                                cpu.getStock() + "\n");
                     }
 
-                    else if (p instanceof Servicio) {
+                    else if (p instanceof Servicio s) {
                         fw.write("Servicio;" +
                                 p.getId() + ";" +
                                 p.getNombre() + ";" +
-                                p.getPrecio() + ";0\n");
+                                p.getPrecio() + ";" +
+                                s.getDuracionHoras() + "\n");
                     }
 
                     else if (p instanceof Articulo a) {
@@ -54,7 +57,8 @@ public class ArchivoProductosHelper {
                                 p.getId() + ";" +
                                 p.getNombre() + ";" +
                                 p.getPrecio() + ";" +
-                                (a.getCategoria() != null ? a.getCategoria().getId() : 0) + "\n");
+                                (a.getCategoria() != null ? a.getCategoria().getId() : 0) + ";" +
+                                a.getStock() + "\n");
                     }
                 }
             }
@@ -94,24 +98,36 @@ public class ArchivoProductosHelper {
                     }
                 }
 
-                Producto producto = null;
+                Producto producto;
 
                 switch (tipo.toLowerCase()) {
-                    case "placadevideo" -> {
+                    case "placadevideo": {
                         int vram = (partes.length > 5) ? Integer.parseInt(partes[5]) : 0;
                         String tipoMemoria = (partes.length > 6) ? partes[6] : "Desconocido";
                         double velocidadMemoria = (partes.length > 7) ? Double.parseDouble(partes[7]) : 0;
-                        producto = new PlacaDeVideo(nombre, precio, categoria, vram, tipoMemoria, velocidadMemoria);
+                        int stock = (partes.length > 8) ? Integer.parseInt(partes[8]) : 0;
+                        producto = new PlacaDeVideo(nombre, precio, categoria, vram, tipoMemoria, velocidadMemoria, stock);
+                        break;
                     }
-                    case "procesador" -> {
+                    case "procesador": {
                         int nucleos = (partes.length > 5) ? Integer.parseInt(partes[5]) : 0;
                         int hilos = (partes.length > 6) ? Integer.parseInt(partes[6]) : 0;
                         double frecuenciaBase = (partes.length > 7) ? Double.parseDouble(partes[7]) : 0;
                         double frecuenciaTurbo = (partes.length > 8) ? Double.parseDouble(partes[8]) : 0;
-                        producto = new Procesador(nombre, precio, categoria, nucleos, hilos, frecuenciaBase, frecuenciaTurbo);
+                        int stock = (partes.length > 9) ? Integer.parseInt(partes[9]) : 0;
+                        producto = new Procesador(nombre, precio, categoria, nucleos, hilos, frecuenciaBase, frecuenciaTurbo, stock);
+                        break;
                     }
-                    case "servicio" -> producto = new Servicio(nombre, precio, 0);
-                    default -> producto = new Articulo(nombre, precio, categoria);
+                    case "servicio": {
+                        int duracionHoras = (partes.length > 5) ? Integer.parseInt(partes[5]) : 0;
+                        producto = new Servicio(nombre, precio, duracionHoras);
+                        break;
+                    }
+                    default: {
+                        int stock = (partes.length > 5) ? Integer.parseInt(partes[5]) : 0;
+                        producto = new Articulo(nombre, precio, categoria, stock);
+                        break;
+                    }
                 }
 
                 productos.add(producto);

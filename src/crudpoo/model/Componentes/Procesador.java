@@ -9,8 +9,8 @@ public class Procesador extends Articulo {
     private double frecuenciaBase;
     private double frecuenciaTurbo;
 
-    public Procesador(String nombre, double precio, Categoria categoria, int nucleos, int hilos, double frecuenciaBase, double frecuenciaTurbo) {
-        super(nombre, precio, categoria);
+    public Procesador(String nombre, double precio, Categoria categoria, int nucleos, int hilos, double frecuenciaBase, double frecuenciaTurbo, int stock) {
+        super(nombre, precio, categoria, stock);
         this.nucleos = nucleos;
         this.hilos = hilos;
         this.frecuenciaBase = frecuenciaBase;

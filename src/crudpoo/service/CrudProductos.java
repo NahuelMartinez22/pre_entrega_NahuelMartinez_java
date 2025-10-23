@@ -22,7 +22,7 @@ public class CrudProductos extends CrudConsola<Producto> {
     @Override
     public void mostrarOpciones() {
         System.out.println("\n=== Menú Productos ===");
-        System.out.println("1) Crear");
+        System.out.println("1) Agregar");
         System.out.println("2) Listar");
         System.out.println("3) Actualizar");
         System.out.println("4) Eliminar");
@@ -30,10 +30,10 @@ public class CrudProductos extends CrudConsola<Producto> {
     }
 
     @Override
-    public void crear() {
-        System.out.println("\n=== Crear producto ===");
+    public void agregar() {
+        System.out.println("\n=== Agregar producto ===");
 
-        System.out.println("¿Qué tipo de producto querés crear?");
+        System.out.println("¿Qué tipo de producto querés agregar?");
         System.out.println("1) Artículo");
         System.out.println("2) Servicio");
         int tipo = leerEntero("Elegí una opción: ");
@@ -41,10 +41,12 @@ public class CrudProductos extends CrudConsola<Producto> {
         if (tipo == 2) {
             String nombre = leerTextoNoVacio("Nombre del servicio: ");
             double precio = leerDoublePositivo("Precio: ");
-            Servicio nuevoServicio = new Servicio(nombre, precio, 0);
+            int duracionHoras = leerEnteroPositivo("Duración del servicio (horas): ");
+
+            Servicio nuevoServicio = new Servicio(nombre, precio, duracionHoras);
             productos.add(nuevoServicio);
             ArchivoProductosHelper.guardarProductos(productos);
-            System.out.println("Servicio creado: " + nuevoServicio);
+            System.out.println("Servicio agregado: " + nuevoServicio);
             return;
         }
 
@@ -53,13 +55,14 @@ public class CrudProductos extends CrudConsola<Producto> {
             return;
         }
 
-        System.out.println("¿Qué tipo de artículo querés crear?");
+        System.out.println("¿Qué tipo de artículo querés agregar?");
         System.out.println("1) Placa de video");
         System.out.println("2) Procesador");
         int opcion = leerEntero("Elegí una opción: ");
 
         String nombre = leerTextoNoVacio("Nombre del artículo: ");
         double precio = leerDoublePositivo("Precio: ");
+        int stock = leerEnteroPositivo("Cantidad en stock: ");
 
         Producto nuevoProducto = switch (opcion) {
             case 1 -> {
@@ -67,7 +70,7 @@ public class CrudProductos extends CrudConsola<Producto> {
                 int vram = leerEnteroPositivo("VRAM (GB): ");
                 String tipoMemoria = leerTextoNoVacio("Tipo de memoria (ej: GDDR6): ");
                 double velocidadMemoria = leerDoublePositivo("Velocidad de memoria (MHz): ");
-                yield new PlacaDeVideo(nombre, precio, categoria, vram, tipoMemoria, velocidadMemoria);
+                yield new PlacaDeVideo(nombre, precio, categoria, vram, tipoMemoria, velocidadMemoria, stock);
             }
             case 2 -> {
                 Categoria categoria = new Categoria(2, "Procesador");
@@ -75,7 +78,7 @@ public class CrudProductos extends CrudConsola<Producto> {
                 int hilos = leerEnteroPositivo("Cantidad de hilos: ");
                 double frecuenciaBase = leerDoublePositivo("Frecuencia base (GHz): ");
                 double frecuenciaTurbo = leerDoublePositivo("Frecuencia turbo (GHz): ");
-                yield new Procesador(nombre, precio, categoria, nucleos, hilos, frecuenciaBase, frecuenciaTurbo);
+                yield new Procesador(nombre, precio, categoria, nucleos, hilos, frecuenciaBase, frecuenciaTurbo, stock);
             }
             default -> {
                 System.out.println("Opción inválida.");
@@ -87,8 +90,9 @@ public class CrudProductos extends CrudConsola<Producto> {
 
         productos.add(nuevoProducto);
         ArchivoProductosHelper.guardarProductos(productos);
-        System.out.println("Producto creado correctamente: " + nuevoProducto);
+        System.out.println("Producto agregado correctamente: " + nuevoProducto);
     }
+
 
     @Override
     public void listar() {
@@ -98,41 +102,42 @@ public class CrudProductos extends CrudConsola<Producto> {
         }
 
         System.out.println("\n=== Lista de productos ===");
-        System.out.printf("%-5s %-20s %-18s %-10s %-70s%n",
-                "ID", "Nombre", "Categoría", "Precio", "Detalles");
-        System.out.println("------------------------------------------------------------------------------------------------------------------");
+        System.out.printf("%-5s %-20s %-18s %-10s %-8s %-70s%n",
+                "ID", "Nombre", "Categoría", "Precio", "Stock", "Detalles");
+        System.out.println("-------------------------------------------------------------------------------------------------------------------------------");
 
         for (Producto p : productos) {
             String nombre = p.getNombre();
             String categoria = "";
             String detalles = "";
+            String stockTexto = "-";
 
             if (p instanceof Articulo articulo) {
                 categoria = (articulo.getCategoria() != null)
                         ? articulo.getCategoria().getNombre()
                         : "(sin categoría)";
+                stockTexto = String.valueOf(articulo.getStock());
 
                 if (p instanceof PlacaDeVideo placa) {
                     detalles = String.format("VRAM: %dGB | Tipo de memoria: %s | Velocidad de memoria: %.0f MHz",
                             placa.getVram(), placa.getTipoMemoria(), placa.getVelocidadMemoria());
-                }
-                else if (p instanceof Procesador cpu) {
+                } else if (p instanceof Procesador cpu) {
                     detalles = String.format("Núcleos: %d | Hilos: %d | Frecuencia base: %.2f GHz | Frecuencia turbo: %.2f GHz",
                             cpu.getNucleos(), cpu.getHilos(), cpu.getFrecuenciaBase(), cpu.getFrecuenciaTurbo());
-                }
-                else {
+                } else {
                     detalles = "(Artículo genérico)";
                 }
 
-            } else if (p instanceof Servicio) {
+            } else if (p instanceof Servicio s) {
                 categoria = "Servicio";
-                detalles = "(Servicio sin atributos adicionales)";
+                detalles = String.format("Duración: %d horas", s.getDuracionHoras());
             }
 
-            System.out.printf("%-5d %-20s %-18s $%-9.2f %-70s%n",
-                    p.getId(), nombre, categoria, p.getPrecio(), detalles);
+            System.out.printf("%-5d %-20s %-18s $%-9.2f %-8s %-70s%n",
+                    p.getId(), nombre, categoria, p.getPrecio(), stockTexto, detalles);
         }
     }
+
 
     @Override
     public void actualizar() {
@@ -148,8 +153,45 @@ public class CrudProductos extends CrudConsola<Producto> {
                 System.out.println("\n----------------------------------------");
                 System.out.println("Actualizar producto");
                 System.out.println("----------------------------------------");
-                System.out.println("Producto actual: " + p.getNombre() + " | Precio actual: $" + p.getPrecio());
-                System.out.println("Si dejás un campo vacío, se mantendrá el valor actual.\n");
+                System.out.println("Producto actual: " + p);
+                System.out.println("----------------------------------------");
+
+                System.out.println("1) Actualizar todo");
+                System.out.println("2) Actualizar solo stock");
+                System.out.println("3) Volver");
+                int opcion = leerEntero("Elegí una opción: ");
+
+                if (opcion == 3) {
+                    System.out.println("Operación cancelada.");
+                    return;
+                }
+
+                if (opcion == 2) {
+                    if (p instanceof Articulo articulo) {
+                        System.out.println("Stock actual: " + articulo.getStock());
+                        String entrada = leerTexto("Nuevo stock (Enter para mantener): ").trim();
+
+                        int nuevoStock;
+                        if (entrada.isEmpty()) {
+                            nuevoStock = articulo.getStock();
+                        } else {
+                            try {
+                                nuevoStock = Integer.parseInt(entrada);
+                            } catch (NumberFormatException e) {
+                                System.out.println("Debe ser un número entero válido.");
+                                return;
+                            }
+                        }
+
+                        articulo.setStock(nuevoStock);
+                        productos.set(i, articulo);
+                        ArchivoProductosHelper.guardarProductos(productos);
+                        System.out.println("Stock actualizado correctamente. Nuevo stock: " + articulo.getStock());
+                    } else {
+                        System.out.println("Este tipo de producto no tiene stock.");
+                    }
+                    return;
+                }
 
                 String nuevoNombre = leerTextoOpcional("Nuevo nombre", p.getNombre());
                 double nuevoPrecio = leerDoubleOpcional("Nuevo precio", p.getPrecio());
@@ -182,10 +224,12 @@ public class CrudProductos extends CrudConsola<Producto> {
                             int nuevaVram = leerEnteroOpcional("Nueva VRAM (GB)", placa.getVram());
                             String nuevoTipoMemoria = leerTextoOpcional("Nuevo tipo de memoria", placa.getTipoMemoria());
                             double nuevaVelocidad = leerDoubleOpcional("Nueva velocidad de memoria (MHz)", placa.getVelocidadMemoria());
+                            int nuevoStock = leerEnteroOpcional("Nuevo stock", placa.getStock());
 
                             placa.setVram(nuevaVram);
                             placa.setTipoMemoria(nuevoTipoMemoria);
                             placa.setVelocidadMemoria(nuevaVelocidad);
+                            placa.setStock(nuevoStock);
 
                             System.out.println("Placa de video actualizada correctamente.");
                         } else if (p instanceof Procesador cpu) {
@@ -203,8 +247,14 @@ public class CrudProductos extends CrudConsola<Producto> {
                             cpu.setFrecuenciaTurbo(nuevaFrecuenciaTurbo);
 
                             System.out.println("Procesador actualizado correctamente.");
-                        } else if (p instanceof Servicio) {
+                        } else if (p instanceof Servicio s) {
+                            int nuevaDuracion = leerEnteroOpcional("Nueva duración (horas)", s.getDuracionHoras());
+                            s.setDuracionHoras(nuevaDuracion);
                             System.out.println("Servicio actualizado correctamente.");
+                        } else if (p instanceof Articulo a) {
+                            int nuevoStock = leerEnteroOpcional("Nuevo stock", a.getStock());
+                            a.setStock(nuevoStock);
+                            System.out.println("Artículo actualizado correctamente.");
                         }
                     }
                     case 2 -> {
@@ -212,7 +262,8 @@ public class CrudProductos extends CrudConsola<Producto> {
                         int vram = leerEnteroPositivo("VRAM (GB): ");
                         String tipoMemoria = leerTextoNoVacio("Tipo de memoria (ej: GDDR6): ");
                         double velocidad = leerDoublePositivo("Velocidad de memoria (MHz): ");
-                        nuevoProducto = new PlacaDeVideo(nuevoNombre, nuevoPrecio, cat, vram, tipoMemoria, velocidad);
+                        int stock = leerEnteroPositivo("Stock: ");
+                        nuevoProducto = new PlacaDeVideo(nuevoNombre, nuevoPrecio, cat, vram, tipoMemoria, velocidad, stock);
                     }
                     case 3 -> {
                         Categoria cat = new Categoria(2, "Procesador");
@@ -220,9 +271,13 @@ public class CrudProductos extends CrudConsola<Producto> {
                         int hilos = leerEnteroPositivo("Cantidad de hilos: ");
                         double frecuenciaBase = leerDoublePositivo("Frecuencia base (GHz): ");
                         double frecuenciaTurbo = leerDoublePositivo("Frecuencia turbo (GHz): ");
-                        nuevoProducto = new Procesador(nuevoNombre, nuevoPrecio, cat, nucleos, hilos, frecuenciaBase, frecuenciaTurbo);
+                        int stock = leerEnteroPositivo("Cantidad en stock: ");
+                        nuevoProducto = new Procesador(nuevoNombre, nuevoPrecio, cat, nucleos, hilos, frecuenciaBase, frecuenciaTurbo, stock);
                     }
-                    case 4 -> nuevoProducto = new Servicio(nuevoNombre, nuevoPrecio, 0);
+                    case 4 -> {
+                        int duracionHoras = leerEnteroPositivo("Duración (horas): ");
+                        nuevoProducto = new Servicio(nuevoNombre, nuevoPrecio, duracionHoras);
+                    }
                     default -> {
                         if (opCat < 1 || opCat > 4)
                             System.out.println("Opción inválida, se mantendrá el tipo original.");
@@ -276,7 +331,7 @@ public class CrudProductos extends CrudConsola<Producto> {
             opcion = leerEntero("Elegí una opción: ");
 
             switch (opcion) {
-                case 1 -> crear();
+                case 1 -> agregar();
                 case 2 -> listar();
                 case 3 -> actualizar();
                 case 4 -> eliminar();

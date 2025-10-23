@@ -6,14 +6,14 @@ public abstract class CrudConsola<T> {
 
     protected final Scanner scanner = new Scanner(System.in);
 
-    public abstract void crear();
+    public abstract void agregar();
     public abstract void listar();
     public abstract void actualizar();
     public abstract void eliminar();
 
     public void mostrarOpciones() {
         System.out.println("\n=== Menú CRUD ===");
-        System.out.println("1) Crear");
+        System.out.println("1) Agregar");
         System.out.println("2) Listar");
         System.out.println("3) Actualizar");
         System.out.println("4) Eliminar");
