@@ -4,6 +4,7 @@ import crudpoo.model.Categoria;
 import crudpoo.model.Producto;
 import crudpoo.service.ArchivoProductosHelper;
 import crudpoo.service.CrudProductos;
+import crudpoo.service.CrudPedidos; // 👈 import nuevo
 
 import java.util.ArrayList;
 
@@ -30,7 +31,10 @@ public class Main {
 
             switch (opcion) {
                 case 1 -> crudProductos.menu();
-                case 2 -> System.out.println("Gestión de pedidos (pendiente de implementar).");
+                case 2 -> {
+                    CrudPedidos crudPedidos = new CrudPedidos(productos);
+                    crudPedidos.menu();
+                }
                 case 0 -> System.out.println("Saliendo del programa...");
                 default -> System.out.println("Opción inválida.");
             }

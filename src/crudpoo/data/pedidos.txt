@@ -1,0 +1,14 @@
+Pedido;1;780.0
+Linea;1;NVIDIA RTX 3060;1;450.0
+Linea;4;AMD Ryzen 5 5600;1;250.0
+Linea;8;Instalación de Windows;1;80.0
+END
+Pedido;2;770.0
+Linea;2;AMD RX 6600 XT;1;400.0
+Linea;5;Intel Core i5-12400F;1;270.0
+Linea;10;Armado de PC;1;100.0
+END
+Pedido;3;1150.0
+Linea;3;NVIDIA RTX 4070;1;700.0
+Linea;6;AMD Ryzen 7 7800X3D;1;450.0
+END

@@ -21,12 +21,13 @@ public class CrudProductos extends CrudConsola<Producto> {
 
     @Override
     public void mostrarOpciones() {
-        System.out.println("\n=== Menú Productos ===");
-        System.out.println("1) Agregar");
-        System.out.println("2) Listar");
-        System.out.println("3) Actualizar");
-        System.out.println("4) Eliminar");
-        System.out.println("0) Volver");
+        System.out.println("\n=== Menú de productos ===");
+        System.out.println("1) Agregar producto");
+        System.out.println("2) Listar productos");
+        System.out.println("3) Actualizar producto");
+        System.out.println("4) Eliminar producto");
+        System.out.println("0) Volver al menú principal");
+        System.out.print("Opción: ");
     }
 
     @Override
@@ -102,39 +103,36 @@ public class CrudProductos extends CrudConsola<Producto> {
         }
 
         System.out.println("\n=== Lista de productos ===");
-        System.out.printf("%-5s %-20s %-18s %-10s %-8s %-70s%n",
+        System.out.printf("%-5s %-25s %-18s %-10s %-8s %-70s%n",
                 "ID", "Nombre", "Categoría", "Precio", "Stock", "Detalles");
-        System.out.println("-------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("------------------------------------------------------------------------------------------------------------------");
 
         for (Producto p : productos) {
-            String nombre = p.getNombre();
             String categoria = "";
             String detalles = "";
-            String stockTexto = "-";
+            String stock = "-";
 
             if (p instanceof Articulo articulo) {
-                categoria = (articulo.getCategoria() != null)
-                        ? articulo.getCategoria().getNombre()
-                        : "(sin categoría)";
-                stockTexto = String.valueOf(articulo.getStock());
+                categoria = articulo.getCategoria() != null ? articulo.getCategoria().getNombre() : "(sin categoría)";
+                stock = String.valueOf(articulo.getStock());
 
-                if (p instanceof PlacaDeVideo placa) {
+                if (articulo instanceof crudpoo.model.Componentes.PlacaDeVideo placa) {
                     detalles = String.format("VRAM: %dGB | Tipo de memoria: %s | Velocidad de memoria: %.0f MHz",
                             placa.getVram(), placa.getTipoMemoria(), placa.getVelocidadMemoria());
-                } else if (p instanceof Procesador cpu) {
+                } else if (articulo instanceof crudpoo.model.Componentes.Procesador cpu) {
                     detalles = String.format("Núcleos: %d | Hilos: %d | Frecuencia base: %.2f GHz | Frecuencia turbo: %.2f GHz",
                             cpu.getNucleos(), cpu.getHilos(), cpu.getFrecuenciaBase(), cpu.getFrecuenciaTurbo());
                 } else {
                     detalles = "(Artículo genérico)";
                 }
-
-            } else if (p instanceof Servicio s) {
+            }
+            else if (p instanceof Servicio s) {
                 categoria = "Servicio";
                 detalles = String.format("Duración: %d horas", s.getDuracionHoras());
             }
 
-            System.out.printf("%-5d %-20s %-18s $%-9.2f %-8s %-70s%n",
-                    p.getId(), nombre, categoria, p.getPrecio(), stockTexto, detalles);
+            System.out.printf("%-5d %-25s %-18s $%-9.2f %-8s %-70s%n",
+                    p.getId(), p.getNombre(), categoria, p.getPrecio(), stock, detalles);
         }
     }
 
@@ -177,6 +175,10 @@ public class CrudProductos extends CrudConsola<Producto> {
                         } else {
                             try {
                                 nuevoStock = Integer.parseInt(entrada);
+                                if (nuevoStock < 0) {
+                                    System.out.println("El stock no puede ser negativo.");
+                                    return;
+                                }
                             } catch (NumberFormatException e) {
                                 System.out.println("Debe ser un número entero válido.");
                                 return;

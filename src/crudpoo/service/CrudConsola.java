@@ -124,4 +124,21 @@ public abstract class CrudConsola<T> {
             return valorActual;
         }
     }
+
+    public void menu() {
+        int opcion;
+        do {
+            mostrarOpciones();
+            opcion = leerEntero("");
+
+            switch (opcion) {
+                case 1 -> agregar();
+                case 2 -> listar();
+                case 3 -> actualizar();
+                case 4 -> eliminar();
+                case 0 -> System.out.println("Volviendo al menú principal...");
+                default -> System.out.println("Opción inválida. Intentá nuevamente.");
+            }
+        } while (opcion != 0);
+    }
 }

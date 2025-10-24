@@ -1,2 +1,10 @@
-PlacaDeVideo;1;rx 580;200.0;1;6;gddr6;5000.0;3
-Procesador;2;ryzen 5 8600g;200.0;2;4;6;5.0;6.0;3
+PlacaDeVideo;1;NVIDIA RTX 3060;450.0;1;12;GDDR6;17000.0;7
+PlacaDeVideo;2;AMD RX 6600 XT;400.0;1;8;GDDR6;16000.0;4
+PlacaDeVideo;3;NVIDIA RTX 4070;700.0;1;12;GDDR6X;21000.0;3
+Procesador;4;AMD Ryzen 5 5600;250.0;2;6;12;3.5;4.4;9
+Procesador;5;Intel Core i5-12400F;270.0;2;6;12;2.5;4.4;6
+Procesador;6;AMD Ryzen 7 7800X3D;450.0;2;8;16;4.2;5.0;5
+Servicio;7;Limpieza de PC;50.0;2
+Servicio;8;Instalación de Windows;80.0;1
+Servicio;9;Cambio de pasta térmica;40.0;1
+Servicio;10;Armado de PC;100.0;3
